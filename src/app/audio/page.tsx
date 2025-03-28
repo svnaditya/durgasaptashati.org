@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -10,48 +10,50 @@ export default function Audio() {
   const router = useRouter();
   const [count, setCount] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const email = "durga@gmail.com";
+  const email = session?.user?.email;
 
   useEffect(() => {
     if (!session) {
       router.push("/signin");
     }
-  }, [session]);
-
-  if (!session) return null;
+  }, [session, router]);
 
   useEffect(() => {
+    if (!session) return;
+
     async function fetchUserCount() {
       try {
-        const response = await axios.post("/api/users/me", { 
-          email: email
+        const response = await axios.post("/api/users/me", {
+          email: email,
         });
-        console.log("logging AT CLIENT",response);
-        const currentCount = response.data.count || "0";
+        console.log("logging AT CLIENT", response);
+        const currentCount = response.data.count;
+        console.log("logging AT CLIENT, currentCount", currentCount);
         setCount(currentCount);
       } catch (error) {
         console.error("Error fetching user count:", error);
       }
     }
     fetchUserCount();
-  }, []);
+  }, [session]);
 
   const handleAudioComplete = async () => {
     if (audioRef.current) {
       audioRef.current?.play();
     }
     try {
-      const response = await axios.post("/api/users/update", { 
-        email: email
+      const response = await axios.post("/api/users/update", {
+        email: email,
       });
 
-      console.log("logging AT CLIENT update method",response);
+      console.log("logging AT CLIENT update method", response);
       setCount(response.data.count);
-
     } catch (error) {
       console.error("Error updating Firestore:", error);
     }
   };
+
+  if (!session) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-blue-50">
@@ -67,10 +69,13 @@ export default function Audio() {
         <div className="bg-white rounded-xl shadow-md mb-6 p-6 border border-blue-100">
           <div className="space-y-2">
             <p className="text-gray-700 text-lg">
-              ನಿಮ್ಮ ಈಮೇಲ್ ಐಡಿ : <span className="text-orange-600 font-semibold">{email}</span>
+              ನಿಮ್ಮ ಈಮೇಲ್ ಐಡಿ :{" "}
+              <span className="text-orange-600 font-semibold">{email}</span>
             </p>
             <p className="text-gray-700 text-lg">
-              ನೀವು <span className="text-orange-600 font-semibold">{count}</span> ಬಾರಿ ನವಾರ್ಣ ಮಂತ್ರ ಜಪ ಮಾಡಿದ್ದೀರಿ
+              ನೀವು{" "}
+              <span className="text-orange-600 font-semibold">{count}</span>{" "}
+              ಬಾರಿ ನವಾರ್ಣ ಮಂತ್ರ ಜಪ ಮಾಡಿದ್ದೀರಿ
             </p>
           </div>
         </div>
@@ -115,19 +120,16 @@ export default function Audio() {
             ನಮ್ಮ ಮುಂದಿನ ಕಾರ್ಯಕ್ರಮದ ವಿವರ :
           </h2>
 
-                  {/* Footer Image */}
-        <div className="rounded-xl overflow-hidden shadow-lg">
-          <img
-            src="./footer.jpg"
-            alt="Footer"
-            className="w-full h-auto object-cover"
-          />
+          {/* Footer Image */}
+          <div className="rounded-xl overflow-hidden shadow-lg">
+            <img
+              src="./footer.jpg"
+              alt="Footer"
+              className="w-full h-auto object-cover"
+            />
+          </div>
         </div>
-        </div>
-
-
       </div>
     </div>
   );
 }
-

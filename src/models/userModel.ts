@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   count: {
     type: Number,
     required: [true, "Please provide a password"],
-  }
+  },
 });
 
 const User = mongoose.models.users || mongoose.model("users", userSchema);

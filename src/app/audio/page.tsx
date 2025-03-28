@@ -1,10 +1,21 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from "next/navigation";
 
 export default function Audio() {
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  const [completed, setCompleted] = useState(false);
+  useEffect(() => {
+    if (!session) {
+      router.push("/signin");
+    }
+  }, [session, router]);
+
+  if (!session) return null;
+
   const [count, setCount] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const email = "durga@gmail.com";
@@ -25,7 +36,6 @@ export default function Audio() {
   }, []);
 
   const handleAudioComplete = async () => {
-    setCompleted(true);
     if (audioRef.current) {
       audioRef.current?.play();
     }
@@ -54,23 +64,26 @@ export default function Audio() {
 
   return (
     <>
+      <div className="flex flex-col items-center justify-center m-4 bg-[#EF9651]" >
+        <h1 className="text-2xl text-[#393E46] font-bold m-4">ನವಾರ್ಣ ಮಂತ್ರ ಜಪ ಅಭಿಯಾನ​</h1>
+      </div>
       <div className="flex flex-col m-4 bg-[#B9D7EA]">
-        <h1 className="text-1xl text-[#393E46] font-bold m-4">ನಿಮ್ಮ ಈಮೇಲ್ ಐಡಿ : <span className="text-[#EC5228]">{email}</span> <br/> <br/>ನೀವು <span className="text-[#EC5228]">{count}</span> ಬಾರಿ ನವಾರ್ಣ ಮಂತ್ರ ಜಪ ಮಾಡಿದ್ದೀರಿ</h1>
+        <h1 className="text-1xl text-[#393E46] font-bold m-4">ನಿಮ್ಮ ಈಮೇಲ್ ಐಡಿ : <span className="text-[#EC5228]">{email}</span> <br /> <br />ನೀವು <span className="text-[#EC5228]">{count}</span> ಬಾರಿ ನವಾರ್ಣ ಮಂತ್ರ ಜಪ ಮಾಡಿದ್ದೀರಿ</h1>
       </div>
       <div className="flex flex-col items-center justify-center m-4 pt-4 pb-4 bg-[#F7FBFC]">
         <audio ref={audioRef} autoPlay controls onEnded={handleAudioComplete} className="w-full max-w-md">
           <source src="./navarna.mp3" type="audio/mpeg" />
-        </audio>      
+        </audio>
       </div>
       <div className="flex flex-col m-4 bg-[#B9D7EA]">
-        <h1 className="text-1xl text-[#393E46] font-bold m-4"><span className="text-[#EC5228]">ಕೆಲವು ನಿಯಮಗಳು :</span> 
-        <br/>
-        <br/>
-        1. ಆಡಿಯೋ ಅನ್ನು ಕೇಳುತ್ತಾ ಜೊತೆಗೆ ಜಪವನ್ನು ಮಾಡಬೇಕು.
-        <br/>
-        2. ಆಡಿಯೋ ಅನ್ನು ಸ್ಕಿಪ್ ಮಾಡಬಾರದು.
-        <br/>
-        3. ಮಧ್ಯ ಫೋನ್ ಬಂದರೆ, ಆಡಿಯೋ ಪಾಜ್ ಮಾಡಿ, ಮತ್ತೆ ಮುಂದುವರೆಸಬೇಕು.
+        <h1 className="text-1xl text-[#393E46] font-bold m-4"><span className="text-[#EC5228]">ಕೆಲವು ನಿಯಮಗಳು :</span>
+          <br />
+          <br />
+          1. ಆಡಿಯೋ ಅನ್ನು ಕೇಳುತ್ತಾ ಜೊತೆಗೆ ಜಪವನ್ನು ಮಾಡಬೇಕು.
+          <br />
+          2. ಆಡಿಯೋ ಅನ್ನು ಸ್ಕಿಪ್ ಮಾಡಬಾರದು.
+          <br />
+          3. ಮಧ್ಯ ಫೋನ್ ಬಂದರೆ, ಆಡಿಯೋ ಪಾಜ್ ಮಾಡಿ, ಮತ್ತೆ ಮುಂದುವರೆಸಬೇಕು.
         </h1>
       </div>
       <div className="flex flex-col m-4 bg-[#F7FBFC]">
@@ -82,3 +95,4 @@ export default function Audio() {
     </>
   );
 }
+

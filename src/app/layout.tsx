@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import AuthProvider from "@/components/nextauth-session-provider";
+import AuthProvider from "@/lib/nextauth-session-provider";
 
 import "./globals.css";
 

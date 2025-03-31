@@ -6,9 +6,9 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please provide an email"],
     unique: true,
   },
-  count: {
+  navarnaCount: {
     type: Number,
-    required: [true, "Please provide a password"],
+    required: [true],
   },
 });
 

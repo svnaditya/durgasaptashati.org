@@ -46,7 +46,7 @@ export default function Audio() {
         const response = await axios.post("/api/users/me", {
           email: email,
         });
-        const currentCount = response.data.count;
+        const currentCount = response.data.navarnaCount;
         setCount(currentCount);
       } catch (error) {
         console.error("Error fetching user count:", error);
@@ -64,7 +64,7 @@ export default function Audio() {
         email: email,
       });
 
-      setCount(response.data.count);
+      setCount(response.data.navarnaCount);
     } catch (error) {
       console.error("Error updating Firestore:", error);
     }

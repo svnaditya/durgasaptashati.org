@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "User not found" }, { status: 400 });
     }
 
-    foundUser.count = foundUser.count + 18;
+    foundUser.navarnaCount = foundUser.navarnaCount + 18;
     await foundUser.save();
 
     return NextResponse.json(foundUser, { status: 200 });

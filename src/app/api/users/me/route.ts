@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     const newUser = new User({
       email,
-      count: 0,
+      navarnaCount: 0,
     });
 
     const savedUser = await newUser.save();

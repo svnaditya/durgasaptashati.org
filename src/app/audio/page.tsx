@@ -177,6 +177,124 @@ export default function Audio() {
           <br/>
           ನಂ: 9019849144 | 9632322577 
         </div>
+
+        {/* Leaderboard Section */}
+        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+          <div className="overflow-x-auto">
+            <Leaderboard />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Leaderboard Component
+function Leaderboard() {
+  const [leaderboardData, setLeaderboardData] = useState<{
+    totalJapa: number;
+    totalUsers: number;
+    topUsers: Array<{email: string, navarnaCount: number, rank: number}>;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchLeaderboardData = async () => {
+      try {
+        const response = await fetch('/api/analytics/top-users');
+        if (!response.ok) throw new Error('Failed to fetch leaderboard');
+        const data = await response.json();
+        setLeaderboardData(data);
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-4">
+        <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+
+  if (!leaderboardData) return null;
+
+  const { totalJapa, totalUsers, topUsers } = leaderboardData;
+
+  return (
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-5 shadow-lg transform transition-all">
+          <div className="flex items-center space-x-3">
+            <div>
+              <p className="text-sm font-medium text-gray pb-2">ಒಟ್ಟು ಜಪದ ಸಂಖ್ಯೆ</p>
+              <p className="text-2xl font-bold text-white">{totalJapa.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-5 shadow-lg transform transition-all">
+          <div className="flex items-center space-x-3">
+            <div>
+              <p className="text-sm font-medium text-gray pb-2">ಒಟ್ಟು ಭಾಗವಹಿಸಿದವರು</p>
+              <p className="text-2xl font-bold text-white">{totalUsers.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Leaderboard Section */}
+      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="px-0 py-4 border-b border-gray-100">
+          <h2 className="text-lg md:text-xl font-bold text-orange-600">
+            ಅತಿ ಹೆಚ್ಚು ಜಪ ಮಾಡಿದವರು
+          </h2>
+        </div>
+        
+        <div className="w-full">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  ಸ್ಥಾನ
+                </th>
+                <th className="px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  ಇಮೇಲ್ ಐಡಿ
+                </th>
+                <th className="px-3 py-2 sm:px-4 sm:py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  ಜಪ
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {topUsers.map((user) => (
+                <tr key={user.email} className="hover:bg-gray-50">
+                  <td className="px-3 py-2 sm:px-4 sm:py-3 whitespace-nowrap">
+                    <span className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-full font-medium bg-gray-100 text-gray-700 text-sm">
+                      {user.rank}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2 sm:px-4 sm:py-3 whitespace-nowrap max-w-[120px] sm:max-w-none truncate">
+                    <span className="text-sm text-gray-900">{user.email}</span>
+                  </td>
+                  <td className="px-3 py-2 sm:px-4 sm:py-3 whitespace-nowrap text-right">
+                    <span className="text-sm font-medium text-gray-900">
+                      {user.navarnaCount.toLocaleString()}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

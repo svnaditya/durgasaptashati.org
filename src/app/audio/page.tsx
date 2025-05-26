@@ -53,9 +53,9 @@ export default function Audio() {
       }
     }
     fetchUserCount();
-  }, [session]);
+  }, [session, email]);
 
-  const handleAudioComplete = async () => {    
+  const handleAudioComplete = async () => {
     if (audioRef.current) {
       audioRef.current?.play();
     }
@@ -138,11 +138,10 @@ export default function Audio() {
           </div>
 
           {/* Hidden Audio Element */}
-          <audio ref={audioRef} onEnded={handleAudioComplete} >
+          <audio ref={audioRef} onEnded={handleAudioComplete}>
             <source src="./navarana-mantra.mp3" type="audio/mpeg" />
           </audio>
         </div>
-
 
         {/* Rules Section */}
         <div className="bg-white rounded-xl shadow-md mb-6 p-6 border border-blue-100">
@@ -170,12 +169,16 @@ export default function Audio() {
           <h2 className="text-xl font-bold text-orange-600 mb-4">
             ನಮ್ಮ ಮುಂದಿನ ಕಾರ್ಯಕ್ರಮದ ವಿವರ :
           </h2>
-          ಕಲಬುರ್ಗಿಯ ಶ್ರೀ ರಾಮಕೃಷ್ಣ ವಿವೇಕಾನಂದ ಆಶ್ರಮದಲ್ಲಿ ನವೆಂಬರ್ ಅಲ್ಲಿ ನಡೆಯುವ ಆಯುತ ಚಂಡೀ ಮಹಾಯಾಗದ ಪೂರ್ವಭಾವಿ ತಯಾರಿಯಾಗಿ ಬೆಂಗಳೂರಿನ ಶ್ರೀ ರಾಜರಾಜೇಶ್ವರಿ ನಗರದ ಕೈಲಾಸ ಆಶ್ರಮ ದೇವಸ್ಥಾನದ ಆವರಣದಲ್ಲಿ ದಿನಾಂಕ <b>31.05.2025 ರಿಂದ 02.06.2025</b> ರ ತನಕ ದಿನಪೂರ್ತಿ ಪಾರಾಯಣ ನೆರವೇರುವುದು.
-          ದಯವಿಟ್ಟು ಶ್ರೀ ದುರ್ಗಾ ಸಪ್ತಶತಿಯನ್ನು ಕಲಿತಿರುವಂತವರು ಭಾಗವಹಿಸಬೇಕಾಗಿ ವಿನಂತಿ.  
-          <br/><br/>
+          ಕಲಬುರ್ಗಿಯ ಶ್ರೀ ರಾಮಕೃಷ್ಣ ವಿವೇಕಾನಂದ ಆಶ್ರಮದಲ್ಲಿ ನವೆಂಬರ್ ಅಲ್ಲಿ ನಡೆಯುವ ಆಯುತ
+          ಚಂಡೀ ಮಹಾಯಾಗದ ಪೂರ್ವಭಾವಿ ತಯಾರಿಯಾಗಿ ಬೆಂಗಳೂರಿನ ಶ್ರೀ ರಾಜರಾಜೇಶ್ವರಿ ನಗರದ
+          ಕೈಲಾಸ ಆಶ್ರಮ ದೇವಸ್ಥಾನದ ಆವರಣದಲ್ಲಿ ದಿನಾಂಕ{" "}
+          <b>31.05.2025 ರಿಂದ 02.06.2025</b> ರ ತನಕ ದಿನಪೂರ್ತಿ ಪಾರಾಯಣ ನೆರವೇರುವುದು.
+          ದಯವಿಟ್ಟು ಶ್ರೀ ದುರ್ಗಾ ಸಪ್ತಶತಿಯನ್ನು ಕಲಿತಿರುವಂತವರು ಭಾಗವಹಿಸಬೇಕಾಗಿ ವಿನಂತಿ.
+          <br />
+          <br />
           ಸಂಪರ್ಕ : ಸ್ವಾಮಿ ಮಹೇಶ್ವರಾನಂದಜಿ
-          <br/>
-          ನಂ: 9019849144 | 9632322577 
+          <br />
+          ನಂ: 9019849144 | 9632322577
         </div>
 
         {/* Leaderboard Section */}
@@ -194,20 +197,19 @@ function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState<{
     totalJapa: number;
     totalUsers: number;
-    topUsers: Array<{email: string, navarnaCount: number, rank: number}>;
+    topUsers: Array<{ email: string; navarnaCount: number; rank: number }>;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const response = await fetch('/api/analytics/top-users');
-        if (!response.ok) throw new Error('Failed to fetch leaderboard');
+        const response = await fetch("/api/analytics/top-users");
+        if (!response.ok) throw new Error("Failed to fetch leaderboard");
         const data = await response.json();
         setLeaderboardData(data);
       } catch (error) {
-        console.error('Error fetching leaderboard:', error);
+        console.error("Error fetching leaderboard:", error);
       } finally {
         setLoading(false);
       }
@@ -224,7 +226,6 @@ function Leaderboard() {
     );
   }
 
-
   if (!leaderboardData) return null;
 
   const { totalJapa, totalUsers, topUsers } = leaderboardData;
@@ -236,16 +237,24 @@ function Leaderboard() {
         <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-5 shadow-lg transform transition-all">
           <div className="flex items-center space-x-3">
             <div>
-              <p className="text-sm font-medium text-gray pb-2">ಒಟ್ಟು ಜಪದ ಸಂಖ್ಯೆ</p>
-              <p className="text-2xl font-bold text-white">{totalJapa.toLocaleString()}</p>
+              <p className="text-sm font-medium text-gray pb-2">
+                ಒಟ್ಟು ಜಪದ ಸಂಖ್ಯೆ
+              </p>
+              <p className="text-2xl font-bold text-white">
+                {totalJapa.toLocaleString()}
+              </p>
             </div>
           </div>
         </div>
         <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-5 shadow-lg transform transition-all">
           <div className="flex items-center space-x-3">
             <div>
-              <p className="text-sm font-medium text-gray pb-2">ಒಟ್ಟು ಭಾಗವಹಿಸಿದವರು</p>
-              <p className="text-2xl font-bold text-white">{totalUsers.toLocaleString()}</p>
+              <p className="text-sm font-medium text-gray pb-2">
+                ಒಟ್ಟು ಭಾಗವಹಿಸಿದವರು
+              </p>
+              <p className="text-2xl font-bold text-white">
+                {totalUsers.toLocaleString()}
+              </p>
             </div>
           </div>
         </div>
@@ -258,7 +267,7 @@ function Leaderboard() {
             ಅತಿ ಹೆಚ್ಚು ಜಪ ಮಾಡಿದವರು
           </h2>
         </div>
-        
+
         <div className="w-full">
           <table className="w-full">
             <thead className="bg-gray-50">

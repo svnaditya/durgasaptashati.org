@@ -21,16 +21,16 @@ export async function GET() {
         $group: {
           _id: null,
           totalJapa: { $sum: "$navarnaCount" },
-          userCount: { $sum: 1 }
-        }
-      }
+          userCount: { $sum: 1 },
+        },
+      },
     ]);
 
     const totalJapa = result[0]?.totalJapa || 0;
     const totalUsers = result[0]?.userCount || 0;
 
     const rankedUsers = topUsers.map((user, index) => ({
-      email: user.email.replace('@gmail.com', ''),
+      email: user.email.replace("@gmail.com", ""),
       navarnaCount: user.navarnaCount,
       rank: index + 1,
     }));
@@ -38,13 +38,13 @@ export async function GET() {
     return NextResponse.json({
       totalJapa,
       totalUsers,
-      topUsers: rankedUsers
+      topUsers: rankedUsers,
     });
   } catch (error) {
     console.error("Error fetching top users:", error);
     return NextResponse.json(
       { error: "Failed to fetch top users" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
